@@ -1,39 +1,36 @@
 import NextLink from 'next/link';
 import { Box, Text } from '@skynexui/components';
 import { useRouter } from 'next/router';
-import dados from '../../dados.json';
 
 // dica dos paths estáticos
 export async function getStaticPaths() {
-  // const paths = [
-  //   { params: { id: '1' } },
-  //   { params: { id: '2' } },
-  //   { params: { id: '3' } }
-  // ]
-  const paths = dados.posts.map((postAtual) => {
-    return { params: { id: `${postAtual.id}` } };
-  })
-  console.log('dados:', dados);
-  console.log('paths:', paths);
+  // const dadosDaAPI = await fetch('https://fakeapi-omariosouto.vercel.app/api/posts')
+  //   .then((res) => res.json());
+
+  // const paths = dadosDaAPI.posts.map((postAtual) => {
+  //   return { params: { id: `${postAtual.id}` } };
+  // })
 
   return {
-    paths: paths,
-    fallback: false // false or 'blocking'
+    // paths: paths,
+    paths: [],
+    fallback: 'blocking' // false or 'blocking'
   };
 }
 
 export async function getStaticProps(context) {
-  console.log('Contexto', context.params.id);
   const id = context.params.id;
+  console.log(`Gerou! ${id}`);
+  const dadosDaAPI = await fetch(`https://fakeapi-omariosouto.vercel.app/api/posts/${id}`)
+  .then((res) => res.json());
+  const post = dadosDaAPI;
+  // const post = dados.posts.find((currentPost) => {
+  //   if(currentPost.id === id) {
+  //     return true;
+  //   }
+  //   return false;
+  // })
 
-  const post = dados.posts.find((currentPost) => {
-    if(currentPost.id === id) {
-      return true;
-    }
-    return false;
-  })
-
-  console.log(post);
 
   return {
     props: {
@@ -42,13 +39,12 @@ export async function getStaticProps(context) {
       date: post.date,
       content: post.content,
     }, 
+    revalidate: 60,
   }
 }
 
 export default function PostByIdScreen(props) {
-  // console.log(props);
   const router = useRouter();
-  // console.log(router);
   const post = {
     title: props.title,
     date: props.date,
@@ -56,7 +52,7 @@ export default function PostByIdScreen(props) {
   };
 
   if(router.isFallback) {
-    return 'Essa página não existe!';
+    return 'Essa página não existe, ainda!!';
   }
 
   return (

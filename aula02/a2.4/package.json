@@ -1,5 +1,5 @@
 {
-  "name": "a2.1",
+  "name": "a1.1",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -7,8 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint",
-    "export": "next build && next export",
-    "start:static": "npx http-server ./out -c-1"
+    "export": "next build && next export -o export-static/",
+    "start:static": "npx http-server ./export-static/ -c-1 -p=3000"
   },
   "keywords": [],
   "author": "",

@@ -2,12 +2,20 @@ import NextLink from 'next/link';
 import { Box, Text, Image } from '@skynexui/components';
 import dados from '../dados.json';
 
-export default function HomeScreen() {
+export async function getStaticProps() {
+  return {
+    props: {
+      posts: dados.posts,
+    },
+  };
+}
+
+export default function HomeScreen({ posts }) {
   const infos = {
     nome: 'Mario Souto',
     githubUser: 'omariosouto',
   }
-  const posts = dados.posts;
+  // const posts = dados.posts;
 
   return (
     <Box
