@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { deleteContactAction } from "../../app/contatos/actions";
 import type { Contact } from "../../data/contacts";
 
 type ContactCardProps = {
@@ -43,12 +46,25 @@ export function ContactCard({ contact }: ContactCardProps) {
           >
             {contact.phone}
           </a>
-          <Link
-            className="mt-5 inline-flex items-center rounded-lg bg-slate-950 px-3 py-2 text-xs font-bold text-white transition group-hover:bg-indigo-600"
-            href={`/contatos/${contact.id}`}
-          >
-            Ver detalhes →
-          </Link>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Link
+              className="inline-flex items-center rounded-lg bg-slate-950 px-3 py-2 text-xs font-bold text-white transition group-hover:bg-indigo-600"
+              href={`/contatos/${contact.id}`}
+            >
+              Ver detalhes →
+            </Link>
+            <form
+              action={deleteContactAction}
+              onSubmit={(event) => {
+                if (!window.confirm(`Excluir ${contact.name}?`)) event.preventDefault();
+              }}
+            >
+              <input name="id" type="hidden" value={contact.id} />
+              <button className="rounded-lg px-3 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-50" type="submit">
+                Excluir
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </article>

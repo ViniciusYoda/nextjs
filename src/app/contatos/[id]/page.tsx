@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { contacts, getContactById } from "../../../data/contacts";
+import { getAllContacts, getContactById } from "../../../data/contacts";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const contacts = await getAllContacts();
   return contacts.map((contact) => ({
     id: contact.id.toString(),
   }));
@@ -13,7 +14,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/contatos/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const contact = getContactById(id);
+  const contact = await getContactById(id);
 
   return {
     title: contact?.name ?? "Contato não encontrado",
@@ -27,7 +28,7 @@ export default async function ContactDetailsPage({
   params,
 }: PageProps<"/contatos/[id]">) {
   const { id } = await params;
-  const contact = getContactById(id);
+  const contact = await getContactById(id);
 
   if (!contact) {
     notFound();
@@ -73,9 +74,14 @@ export default async function ContactDetailsPage({
         </div>
       </article>
 
-      <Link className="mt-8 inline-block font-bold text-indigo-600 hover:underline" href="/contatos">
-        ← Voltar para contatos
-      </Link>
+      <div className="mt-8 flex flex-wrap gap-5">
+        <Link className="font-bold text-indigo-600 hover:underline" href="/contatos">
+          ← Voltar para contatos
+        </Link>
+        <Link className="font-bold text-rose-600 hover:underline" href={`/contatos/${contact.id}/editar`}>
+          Editar contato →
+        </Link>
+      </div>
     </main>
   );
 }

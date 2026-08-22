@@ -1,6 +1,10 @@
-import { contacts } from "../../data/contacts";
+import { getAllContacts } from "../../data/contacts";
+import { requireSession } from "../../lib/auth";
+import { logout } from "../login/actions";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const session = await requireSession();
+  const contacts = await getAllContacts();
   const categories = new Set(contacts.map((contact) => contact.category)).size;
 
   return (
@@ -10,8 +14,11 @@ export default function Dashboard() {
       </p>
       <h1 className="mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">Dashboard</h1>
       <p className="mt-3 text-slate-600">
-        Um resumo da agenda usando dados calculados no servidor.
+        Sessão ativa para <strong>{session.email}</strong>. Dados calculados no servidor.
       </p>
+      <form action={logout} className="mt-5">
+        <button className="text-sm font-bold text-rose-600 hover:underline" type="submit">Encerrar sessão</button>
+      </form>
 
       <section className="mt-10 grid gap-5 sm:grid-cols-3">
         {[

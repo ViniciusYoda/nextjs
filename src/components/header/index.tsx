@@ -28,6 +28,11 @@ export function Header() {
                 Dashboard
               </Link>
             </li>
+            <li>
+              <Link className="block rounded-full bg-indigo-600 px-3 py-2 text-white transition hover:bg-indigo-500 sm:px-4" href="/login">
+                Entrar
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
